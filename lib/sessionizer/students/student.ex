@@ -5,8 +5,14 @@ defmodule Sessionizer.Students.Student do
   schema "students" do
     field :first_name, :string
     field :last_name, :string 
+    # using this as a virtual field so we can cast 
+    # in the new student form changeset, but now 
+    # it shows up in all student structs.  Is there
+    # a better way to deal with this?
     field :cohort_number, :integer, virtual: true
     belongs_to :cohort, Sessionizer.Cohorts.Cohort 
+    has_many :navigator_sessions, Sessionizer.PairSessions.PairSession, foreign_key: :navigator_id
+    has_many :driver_sessions, Sessionizer.PairSessions.PairSession, foreign_key: :driver_id
     timestamps()
   end
 
