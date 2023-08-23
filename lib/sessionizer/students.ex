@@ -2,7 +2,7 @@ defmodule Sessionizer.Students do
   alias Sessionizer.Students.Student 
   alias Sessionizer.Cohorts.Cohort 
   alias Sessionizer.Repo
-  alias Ecto.Query
+  import Ecto.Query
 
   def get!(id) do
     Repo.get!(Student, id)
@@ -10,6 +10,17 @@ defmodule Sessionizer.Students do
 
   def get(id) do
     Repo.get(Student, id)
+  end
+
+  def all, do: Repo.all(Student) |> Repo.preload(:cohort)     
+
+  def get_by_cohort(cohort_number) when is_integer(cohort_number) do
+    q = from s in Student,
+        join: c in Cohort,
+        on: c.id == s.cohort_id,
+        where: c.cohort_number == ^cohort_number
+
+    Repo.all(q)
   end
 
   def new(attrs \\ %{}) do
