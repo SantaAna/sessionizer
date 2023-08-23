@@ -14,15 +14,14 @@ defmodule Sessionizer.Repo.Migrations.StudentsAndSessions do
       timestamps()
     end 
 
-    create table("sessions") do
+    create table("pair-sessions") do
       add :duration_seconds, :integer
+      add :start_time, :naive_datetime
+      add :end_time, :naive_datetime
       add :notes, :text
+      add :navigator_id, references(:students)
+      add :driver_id, references(:students)
       timestamps()
-    end
-
-    create table("session_students") do
-      add :student_id, references(:students)
-      add :session_id, references(:sessions)
     end
 
     create unique_index("cohorts", [:cohort_number])
