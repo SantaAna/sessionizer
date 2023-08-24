@@ -1,6 +1,7 @@
 defmodule SessionizerWeb.AddStudent do
   use SessionizerWeb, :live_view
   alias Sessionizer.Students
+  alias Sessionizer.StudentPubSub
   @html_path "/add_student"
 
   def mount(_params, _session, socket) do
@@ -27,11 +28,17 @@ defmodule SessionizerWeb.AddStudent do
   def handle_event("save-student", %{"student" => attrs}, socket) do
     Students.new_from_form(attrs)
     |> then(fn
-      {:ok, _} ->
+      {:ok, student} ->
+        StudentPubSub.broadcast_add(%{
+          student
+          | cohort_number: String.to_integer(attrs["cohort_number"])
+        })
+
         socket
         |> push_navigate(to: @html_path)
         |> put_flash(:info, "Student successfully added")
-        |> then(& {:noreply, &1})
+        |> then(&{:noreply, &1})
+
       {:error, error_changeset} ->
         {:noreply, assign(socket, :form, to_form(error_changeset))}
     end)
