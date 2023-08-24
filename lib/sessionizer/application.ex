@@ -17,7 +17,8 @@ defmodule Sessionizer.Application do
       # Start Finch
       {Finch, name: Sessionizer.Finch},
       # Start the Endpoint (http/https)
-      SessionizerWeb.Endpoint
+      SessionizerWeb.Endpoint,
+      {Sessionizer.StudentCache, []}
       # Start a worker by calling: Sessionizer.Worker.start_link(arg)
       # {Sessionizer.Worker, arg}
     ]
