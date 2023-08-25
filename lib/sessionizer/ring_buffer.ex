@@ -7,12 +7,24 @@ defmodule Sessionizer.RingBuffer do
           count: integer
         }
 
-  def new(starting_queue) when is_list(starting_queue) do
-    %__MODULE__{
-      waiting: starting_queue,
-      finished: [],
-      count: length(starting_queue)
-    }
+  def new(starting_queue, opts \\ []) when is_list(starting_queue) do
+    shuffle = Keyword.get(opts, :shuffle, false)
+
+    case shuffle do
+      true ->
+        %__MODULE__{
+          waiting: starting_queue |> Enum.shuffle(),
+          finished: [],
+          count: length(starting_queue)
+        }
+
+      _ ->
+        %__MODULE__{
+          waiting: starting_queue,
+          finished: [],
+          count: length(starting_queue)
+        }
+    end
   end
 
   @doc """
