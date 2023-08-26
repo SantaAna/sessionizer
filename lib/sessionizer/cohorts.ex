@@ -11,6 +11,10 @@ defmodule Sessionizer.Cohorts do
     Repo.get!(Cohort,id)
   end
 
+  def all do
+    Repo.all(Cohort)
+  end
+
   def get_cohort_by_number(cohort_number, preloads \\ []) do
     Repo.get_by(Cohort, cohort_number: cohort_number)
     |> Repo.preload(preloads)
