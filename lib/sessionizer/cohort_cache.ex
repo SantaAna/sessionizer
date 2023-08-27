@@ -25,7 +25,7 @@ defmodule Sessionizer.CohortCache do
 
   def handle_call({:next_pair, cohort_number}, _from, state) do
     {pair, state} = CohortTracker.next_pair(state, cohort_number)
-    {:reply, pair, state}
+    {:reply, {:ok, pair}, state}
   end
 
   # server side 
