@@ -26,9 +26,7 @@ import topbar from "../vendor/topbar"
 let Hooks = {}
 Hooks.CohortSelection = {
     mounted(){
-        console.log("the hook mounted")
         this.el.addEventListener("change", e => {
-            console.log("the hook has fired")
             this.pushEvent("cohort-selected", {cohort_number: e.target.value})
         })
     }
