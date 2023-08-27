@@ -16,7 +16,8 @@ defmodule SessionizerWeb.Sessions do
        navigator: nil,
        start_time: nil,
        session_running: false,
-       session_count: 0
+       session_count: 0,
+       notes: nil
      )}
   end
 
@@ -36,14 +37,22 @@ defmodule SessionizerWeb.Sessions do
       </.button>
     </div>
     <div :if={@session_running} class="flex flex-row gap-3">
-      <p class="text-lg">Navigator: <%= @navigator.first_name %></p>
-      <p class="text-lg">Driver: <%= @driver.first_name %></p>
-      <p class="text-lg">Timer: <%= @timer %></p>
-      <.button phx-click="stop-session">
-        Stop Sessoin
-      </.button>
+      <form phx-change="change-notes">
+        <p class="text-lg">Navigator: <%= @navigator.first_name %></p>
+        <p class="text-lg">Driver: <%= @driver.first_name %></p>
+        <p class="text-lg">Timer: <%= @timer %></p>
+        <input type="text" name="notes" value={@notes} />
+        <.button phx-click="stop-session">
+          Stop Sessoin
+        </.button>
+      </form>
     </div>
     """
+  end
+
+  def handle_event("change-notes", %{"notes" => notes}, socket) do
+    IO.puts("fired change event")
+    {:noreply, assign(socket, :notes, notes)}
   end
 
   def handle_event("stop-session", _unsigned_params, socket) do
@@ -52,7 +61,9 @@ defmodule SessionizerWeb.Sessions do
     PairSessions.create(%{
       driver: socket.assigns.navigator,
       navigator: socket.assigns.driver,
-      start_time: socket.assigns.start_time, end_time: NaiveDateTime.utc_now()
+      start_time: socket.assigns.start_time,
+      end_time: NaiveDateTime.utc_now(),
+      notes: socket.assigns.notes
     })
 
     {:noreply,
@@ -62,7 +73,8 @@ defmodule SessionizerWeb.Sessions do
        start_time: nil,
        session_running: false,
        session_count: socket.assigns.session_count + 1,
-       timer: 0
+       timer: 0,
+       notes: nil
      )}
   end
 
