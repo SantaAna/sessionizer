@@ -85,6 +85,7 @@ defmodule SessionizerWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import SessionizerWeb.CoreComponents
+      import SessionizerWeb.SessionizerComponents
       import SessionizerWeb.Gettext
 
       # Shortcut for generating JS commands

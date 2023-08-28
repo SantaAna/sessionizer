@@ -20,6 +20,7 @@ defmodule SessionizerWeb.Router do
     get "/", PageController, :home
     live "/add_student", AddStudent
     live "/sessions", Sessions
+    live "/student/:student_id", StudentProfile
   end
 
   # Other scopes may use custom stacks.
