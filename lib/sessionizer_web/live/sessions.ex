@@ -37,7 +37,10 @@ defmodule SessionizerWeb.Sessions do
         Next Pair
       </.button>
     </div>
-    <div :if={@session_running} class="flex flex-col gap-5 mt-5 p-3 rounded-lg drop-shadow-md bg-slate-50">
+    <div
+      :if={@session_running}
+      class="flex flex-col gap-5 mt-5 p-3 rounded-lg drop-shadow-md bg-slate-50"
+    >
       <div class="flex flex-row gap-3 mx-auto">
         <p class="text-lg">Navigator: <%= @navigator.first_name %></p>
         <p class="text-lg">Driver: <%= @driver.first_name %></p>
@@ -51,30 +54,29 @@ defmodule SessionizerWeb.Sessions do
         Stop Session
       </.button>
     </div>
-    <div class="flex flex-col gap-3">
-    <div :for={session <- @completed_sessions}> 
-    <p><%= "#{session.driver.first_name} #{session.driver.last_name}" %> </p>
-    <p><%= "#{session.navigator.first_name} #{session.navigator.last_name}"%></p>
-    </div>
-    </div>
+    <.session_list sessions={@completed_sessions} />
     """
   end
+
 
   def handle_event("change-notes", %{"notes" => notes}, socket) do
     {:noreply, assign(socket, :notes, notes)}
   end
 
   def handle_event("stop-session", _unsigned_params, socket) do
-    {:ok, session} = PairSessions.create(%{
-      driver: socket.assigns.navigator,
-      navigator: socket.assigns.driver,
-      start_time: socket.assigns.start_time,
-      end_time: NaiveDateTime.utc_now(),
-      notes: socket.assigns.notes
-    })
+    {:ok, session} =
+      PairSessions.create(%{
+        driver: socket.assigns.navigator,
+        navigator: socket.assigns.driver,
+        start_time: socket.assigns.start_time,
+        end_time: NaiveDateTime.utc_now(),
+        notes: socket.assigns.notes
+      })
+
     IO.inspect(session, label: "session before preload")
     session = PairSessions.load_participants(session)
     IO.inspect(session, label: "session after preload")
+
     {:noreply,
      assign(socket,
        driver: nil,
