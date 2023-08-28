@@ -12,6 +12,11 @@ defmodule Sessionizer.Students do
     Repo.get(Student, id)
   end
 
+  def get(id, preloads) when is_list(preloads) do
+    Repo.get(Student, id)
+    |> Repo.preload(preloads)
+  end
+
   def all, do: Repo.all(Student) |> Repo.preload(:cohort)     
 
   def get_by_cohort(cohort_number) when is_integer(cohort_number) do
@@ -48,5 +53,9 @@ defmodule Sessionizer.Students do
     attrs
     |> new_form_change()
     |> Repo.insert()
+  end
+
+  def student_full_name(%Student{} = student) do
+    "#{student.first_name} #{student.last_name}"
   end
 end
