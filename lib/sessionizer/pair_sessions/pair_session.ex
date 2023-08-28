@@ -34,7 +34,7 @@ defmodule Sessionizer.PairSessions.PairSession do
   # checks that the end time is after the start time 
   defp validate_positive_duration(changeset) do
     validate_change(changeset, :start_time, fn :start_time, start_time -> 
-      if NaiveDateTime.compare(start_time, get_field(changeset, :end_time)) == :lt do
+      if NaiveDateTime.compare(start_time, get_field(changeset, :end_time)) in [:lt, :eq] do
         []
         else
         [start_time: "must be before end_time"]
